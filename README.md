@@ -1,2 +1,11 @@
-# ml-paper
-Paper on initial steps towards applying machine learning algorithms to the nuclear forensics problem
+ANS Transactions LaTeX template
+===============================
+
+
+Compiling
+----------------
+
+    pdflatex example
+    bibtex example
+    pdflatex example
+    pdflatex example
