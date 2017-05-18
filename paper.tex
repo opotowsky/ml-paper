@@ -2,7 +2,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{%
 The Nuclear Forensics Problem and Statistical Methods: \\
-Evaluating the Nuclear Fuel Cycle with Machine Learning
+Evaluating Machine Learning for Spent Fuel Prediction
 }
 \author{Arrielle C. Opotowsky, Paul P.H. Wilson}
 
@@ -86,18 +86,13 @@ nuclear forensics focuses on the characterization and interpretation of those
 results. This, in combination with intelligence data, aids in material
 attribution, which is the overall goal of nuclear forensics.  
 
-(Something on goal to get as much info as possible within 24 h of interception
-or device detonation). 
-
-Nuclear Forensics Workflow Although this focuses on Some materials of special
-interest: SNF and reprocessed MOX.  For SNF, measure material, use isotope
-content and/or isotope ratios to determine things like reactor type, fuel type
-and enrichment at beginning of irradiation, cooling time, burnup. For
-reprocessed MOX, ??. 
+Workflow for determining SNF quantities of interest: measure material, use
+isotope content and/or isotope ratios to determine things like reactor type,
+fuel type and enrichment at beginning of irradiation, cooling time, burnup.
 
 After the material characteristics are measured, they are matched in a
 forensics database that includes some or all this information for
-pre-existing/pre-measured SNF/MOX. These databases are kept by individual
+pre-existing/pre-measured SNF. These databases are kept by individual
 countries, and a given database will have widely varying uncertainty depending
 where the material was measured as well as missing data in some fields.
 Therefore, matching can be difficult.
@@ -113,6 +108,9 @@ the near perfect results of some destructive mass spec techniques, like TIMS.
 Additionally, within gamma spec techniques (field vs lab), uncertainties can
 also vary.
 
+(Something on goal to get as much info as possible within 24 h of interception
+or device detonation). 
+
 \subsection{Machine Learning}
 
 Given imperfect data with varying amounts of uncertainty as well as the
@@ -125,152 +123,175 @@ type, fuel type) and predict values such as burnup, initial enrichment, or
 cooling time (regression).
 
 Add some real ML background here
-\begin{subequations} \label{eqs:fullTransport}
-\begin{multline} \label{eq:fullTransportVol}
-  \vec{\Omega}\vd \grad \psi(\vec{x}, \vec{\Omega})
-  + \sigma(\vec{x}) \psi (\vec{x}, \vec{\Omega})
-\\ =
-  \frac{\sigma_s(\vec{x})}{4\pi} \int_{4\pi} \psi(\vec{x},\vec{\Omega}')
-  \ud\Omega' + \frac{q(\vec{x})}{4\pi}
-  \equiv \frac{1}{4\pi} Q(\vec{x}) \,,
-\end{multline}
-inside $\vec{x} \in V$, $\vec{\Omega} \in 4\pi$, with an incident boundary
-condition
-\begin{equation} \label{eq:fullTransportBndy}
-  \psi(\vec{x}, \vec{\Omega}) = \psi^b(\vec{x}, \vec{\Omega}) \,,
- \quad \vec{x} \in \partial V, \ \vec{\Omega} \vd \vec{n} < 0\,.
-\end{equation}
-\end{subequations}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimental Design}
 
-Talk about Dayman paper and how I'm extending that, to include neural nets
-first and to eval mucking up the training data second.
+This work begins by replicating the training and test sets used in ref (cite
+Dayman). The study does evaluate the imapact of randomly introduced error of
+varying amounts on the ability of the algorithms to correctly predict the
+burnup and reactor type. It also varies the amount of nuclides given as
+training to the algorithms (a full list, a short list determined by PCA, and
+fission products only). However, machine learning algorithms are heavily
+dependent on the inputs and parameters given to them, such as training set
+sizes, learning rates, etc. Additionally, it does not consider more advanced
+aglorithms. This paper adds in the comparison of the simpler algorithms to
+neural nets. It also presents learning curves for each algorithm to investigate
+the effect of the training set size on prediction error. For the classification
+of reactor type, ROC curves are also presented to evaluate prediction and
+generalization strength. For the regression of burnup, ??? pairwise t test?.
+Thus, I will first investigate these algorithms with no error introduced, but
+will extend the validation from a predetermined test set to be randomly
+partitioned cross validation.  And the next study will introduce error by
+limiting the nuclides to only those that can be measured with a gamma
+spectrometer (future work).
 
 \subsection{Algorithms Used}
 
-Preprocessing, kNN, ridge, neural net - these are all discussed above, but can
-talk deets + parameters here
+NN classifier+regressor, ridge classification + regression, neural net
+classification + regression- these are all discussed above, but can talk deets
++ parameters here
 
 \subsection{Validation of Each Algorithm}
 
-Classification Training Error: Predetermined test set for training error,
-perhaps can make a learning curve (maybe not until there is a variable
-train/test set for cross validation)
+Using predetermined test set:
 
-Classification and Regression Error Confidence: Confidence intervals on error
-(helps understand true error versus just the sample error), Test set must be >
-30 instances, Can easily calculate N\% confidence interval.
+1. Learning curves: For a given (randomly chosen) training set size for each
+algorithm, run several trainings and predictions. This helps determine if we
+are over or under training and each algorithm's robustness to over/under
+fitting.  
 
-Generalizability should be evaluated (learning more about this with cs760
-project)
+2. Classification Training Error: Precision/recall values / ROC curves for the
+3 classes or maybe comparing algorithms to each other for each class
+
+3. Regression Training Error: Confidence intervals on predictions to understand
+true error versus sample error Test set must be > 30 instances, Can easily
+calculate N\% confidence interval.
+
+Using cross-validation instead:
+
+1. redo learning curve study without having to run several trainings and
+predictions for each set (bc that's already done!)
+
+2. redo precision/recall study 
+
+3. redo confidence interval study
+
 
 \subsection{Comparing Algorithms}
 
-Options for comparison of algorithms: Comparing classification of 2 classes on
-same ROC plot with multiple ML systems, Scatter plots, Pairwise t-tests
+Maybe can delete this if I already discuss it in the above section. Options for
+comparison of algorithms: Comparing classification of 2 classes on same ROC
+plot with multiple ML systems, Scatter plots, Pairwise t-tests. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results and Analysis}
-The results were interesting, so interesting in fact that we have decided to
-present them here.
+
+So far, should include, with all 4 algorithms shown in each plot:
+1. Learning curves  + CV curve
+2. ROC plots + CV plot
+3. Confidence interval tables + CV table
+
+For the above categories in the validation section, can show plots directly
+next to each other (for 1, 2, 3) to hopefully show that cross validation
+provides better generalizability.  Future work would be to investigate the
+number of cross validation folds. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Subsection Goes Here}
-The user must manually capitalize initial letters of a subsection heading.
-
-For those who like equations in their papers, \LaTeX\ is a good choice. Here is
-an equation for the Marshak diffusion boundary condition:
-\begin{equation} \label{eq:marshak}
-  4 J^- = \phi + 2 D \vec{n} \vd \grad \phi \,.
-\end{equation}
-If we so choose, we can effortlessly reference the equation later.
-
-Another paragraph starts with Eq.~\eqref{eq:marshak} and sets $J^-$ to zero, a
-vacuum boundary condition:
-\begin{equation*}
-  0 = \phi + \frac{2}{3} \frac{1}{\sigma} \vec{n} \vd \grad \phi \,.
-\end{equation*}
-The extrapolation distance is $2/3$. A more detailed asymptotic analysis yields
-an extrapolation distance of about $0.71045$.
-
-Figure~\ref{fig:voltage} shows how a plot might conceivably look in your
-document. Always place figures after they are referenced so as not to throw
-off the reader. You can use symbols and different line styles to help
-differentiate your results, especially if they are printed in black and white.
-Note how Fig.~\ref{fig:voltage} uses dashed lines \verb|--| for the exact
-solution, solid lines \verb|-| for the new method's solutions, and dotted lines
-\verb|:| for existing inaccurate methods.
-\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
-  \centering
-  \includegraphics{example_figure}
-  \caption{Captions are flush with the left.}
-  \label{fig:voltage}
-\end{figure}
-
-Later on, we can include a table, even one that spans two columns such as
-Table~\ref{tab:widetable}.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{table*}[htb]
-  \centering
-\begin{tabular}{llllllllll}\toprule
-      & $\phi_T(0)$      & $\phi_T(10)$      & $\phi_T(20)$      &
-      $\phi_D(0)$      & $\phi_D(10)$      & $\phi_D(20)$      & $\rho$      &
-      $\varepsilon$      & $N_\text{it}$
-\\ \midrule
-$c=0.999$  & 0.9038 & 20.63 & 31.24 & 0.9087 & 20.63 & 31.23 & 0.2192 & $10^{-7}$ & 15
-\\
-$c=0.990$  & 0.3675 & 13.04 & 24.7 & 0.3696 & 13.04 & 24.69 & 0.2184 & $10^{-7}$ & 15
-\\
-$c=0.900$  & 0.009909 & 4.776 & 17.64 & 0.009984 & 4.786 & 17.63 & 0.2118 & $10^{-7}$ & 14
-\\
-$c=0.500$  & $6.069\times 10^{-5}$ & 2.212 & 15.53 & 6.213$\times 10^{-5}$ & 2.239 & 15.53 & 0.2068 & $10^{-7}$ & 13
-\\
-\bottomrule
-\end{tabular}
-  \caption{This is an example of a really wide table which might not normally
-  fit in the document.}
-  \label{tab:widetable}
-\end{table*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Notice how the table reference uses a Roman numeral
-for its numbering scheme, whereas the figure reference uses an Arabic numeral.
-For one-column tables, use the \verb|table| environment; two-column tables use
-\verb|table*|. The same applies to figures.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Another Subsection}
-Excessive sectioning in a three-page document is discouraged, but here are more
-subsections to demonstrate compliance with the ANS formatting guidelines.
-
-\subsubsection{Third-level Heading}
-This subsubsection shows compliance with the ANS-specified standard. This level
-of heading should be used rarely.
-
-\subsubsection{Another Such Heading}
-And, if you really think you need a third-level heading, you should make sure
-that your subsection needs at least two of them.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusions}
-
-The included ANS style file and this clear example file are a panacea for
-the hours of headache that invariably results from formatting a document in
-Microsoft Word.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\appendix
-\section{Appendix}
-
-Numbering in the appendix is different:
-\begin{equation} \label{eq:appendix}
-  2 + 2 = 5\,.
-\end{equation}
-and another equation:
-\begin{equation} \label{eq:appendix2}
-  a + b = c\,.
-\end{equation}
+%\subsection{Subsection Goes Here}
+%The user must manually capitalize initial letters of a subsection heading.
+%
+%For those who like equations in their papers, \LaTeX\ is a good choice. Here is
+%an equation for the Marshak diffusion boundary condition:
+%\begin{equation} \label{eq:marshak}
+%  4 J^- = \phi + 2 D \vec{n} \vd \grad \phi \,.
+%\end{equation}
+%If we so choose, we can effortlessly reference the equation later.
+%
+%Another paragraph starts with Eq.~\eqref{eq:marshak} and sets $J^-$ to zero, a
+%vacuum boundary condition:
+%\begin{equation*}
+%  0 = \phi + \frac{2}{3} \frac{1}{\sigma} \vec{n} \vd \grad \phi \,.
+%\end{equation*}
+%The extrapolation distance is $2/3$. A more detailed asymptotic analysis yields
+%an extrapolation distance of about $0.71045$.
+%
+%Figure~\ref{fig:voltage} shows how a plot might conceivably look in your
+%document. Always place figures after they are referenced so as not to throw
+%off the reader. You can use symbols and different line styles to help
+%differentiate your results, especially if they are printed in black and white.
+%Note how Fig.~\ref{fig:voltage} uses dashed lines \verb|--| for the exact
+%solution, solid lines \verb|-| for the new method's solutions, and dotted lines
+%\verb|:| for existing inaccurate methods.
+%\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
+%  \centering
+%  \includegraphics{example_figure}
+%  \caption{Captions are flush with the left.}
+%  \label{fig:voltage}
+%\end{figure}
+%
+%Later on, we can include a table, even one that spans two columns such as
+%Table~\ref{tab:widetable}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{table*}[htb]
+%  \centering
+%\begin{tabular}{llllllllll}\toprule
+%      & $\phi_T(0)$      & $\phi_T(10)$      & $\phi_T(20)$      &
+%      $\phi_D(0)$      & $\phi_D(10)$      & $\phi_D(20)$      & $\rho$      &
+%      $\varepsilon$      & $N_\text{it}$
+%\\ \midrule
+%$c=0.999$  & 0.9038 & 20.63 & 31.24 & 0.9087 & 20.63 & 31.23 & 0.2192 & $10^{-7}$ & 15
+%\\
+%$c=0.990$  & 0.3675 & 13.04 & 24.7 & 0.3696 & 13.04 & 24.69 & 0.2184 & $10^{-7}$ & 15
+%\\
+%$c=0.900$  & 0.009909 & 4.776 & 17.64 & 0.009984 & 4.786 & 17.63 & 0.2118 & $10^{-7}$ & 14
+%\\
+%$c=0.500$  & $6.069\times 10^{-5}$ & 2.212 & 15.53 & 6.213$\times 10^{-5}$ & 2.239 & 15.53 & 0.2068 & $10^{-7}$ & 13
+%\\
+%\bottomrule
+%\end{tabular}
+%  \caption{This is an example of a really wide table which might not normally
+%  fit in the document.}
+%  \label{tab:widetable}
+%\end{table*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Notice how the table reference uses a Roman numeral
+%for its numbering scheme, whereas the figure reference uses an Arabic numeral.
+%For one-column tables, use the \verb|table| environment; two-column tables use
+%\verb|table*|. The same applies to figures.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{Another Subsection}
+%Excessive sectioning in a three-page document is discouraged, but here are more
+%subsections to demonstrate compliance with the ANS formatting guidelines.
+%
+%\subsubsection{Third-level Heading}
+%This subsubsection shows compliance with the ANS-specified standard. This level
+%of heading should be used rarely.
+%
+%\subsubsection{Another Such Heading}
+%And, if you really think you need a third-level heading, you should make sure
+%that your subsection needs at least two of them.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Conclusions}
+%
+%The included ANS style file and this clear example file are a panacea for
+%the hours of headache that invariably results from formatting a document in
+%Microsoft Word.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\appendix
+%\section{Appendix}
+%
+%Numbering in the appendix is different:
+%\begin{equation} \label{eq:appendix}
+%  2 + 2 = 5\,.
+%\end{equation}
+%and another equation:
+%\begin{equation} \label{eq:appendix2}
+%  a + b = c\,.
+%\end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgments}
