@@ -186,7 +186,7 @@ support vectors.
 
 \subsubsection{Nearest Neighbor Regression}
 
-\todo{intro, alg math, etc} 
+\todo{intro, alg math, explain distance metrics} 
 
 Nearest neighbor regression calculates a value based on the instance that is
 closest to it. The metrics for distance differ, but in this study, Euclidian
@@ -196,7 +196,7 @@ that.
 
 \subsubsection{Ridge Regression}
 
-\todo{intro, alg math, etc} 
+\todo{intro, alg math, explain regularization} 
 
 Ridge regression utilizes normal linear least squares regression, but with a
 parameter that penalizes correct answers to prevent overfitting, which is
@@ -205,7 +205,6 @@ referred to as regularization.
 \subsubsection{Support Vector Regression}
 
 \todo{add schematics from pres...or diff pics with the math?} 
-
 
 Support vector regression (SVR) is an extension of the popular classification
 algorithm, support vector machine (SVM).  This algorithm was chosen because of
@@ -276,42 +275,45 @@ model. \todo{either explain or cite cross validation next}
 
 \subsection{Information Reduction}
 
-The study does evaluate the impact of randomly introduced error of varying
-amounts on the ability of the algorithms to correctly predict the burnup. It
-also varies the amount of nuclides given as training to the algorithms (a full
-list, a short list determined by PCA, and fission products only). However,
-machine learning algorithms are heavily dependent on the inputs and parameters
-given to them, such as training set sizes, learning rates, etc. Additionally,
-it does not consider more advanced aglorithms. This paper adds in the
-comparison of the simpler algorithms to neural nets. It also presents learning
-curves for each algorithm to investigate the effect of the training set size on
-prediction error. For the classification of reactor type, ROC curves are also
-presented to evaluate prediction and generalization strength. For the
-regression of burnup, ??? pairwise t test?.  Thus, I will first investigate
-these algorithms with no error introduced, but will extend the validation from
-a predetermined test set to be randomly partitioned cross validation.  And the
-next study will introduce error by limiting the nuclides to only those that can
-be measured with a gamma spectrometer (future work).
+This study evaluates the impact of randomly introduced error of varying amounts
+on the ability of the algorithms to correctly predict the burnup. Thus, first
+investigated are the three algorithms with no error introduced, and next with
+the random errors applied uniformly to each nuclide vector. Since error in a
+nuclide vector is not random, in fact it is systematic and dependent on a
+number of known sources of uncertainty, the next study will introduce error by
+limiting the nuclides to only those that can be measured with a gamma
+spectrometer (future work).
 
 \subsection{Algorithm Evaluation}
 
-Using predetermined test set:
+Additionally, machine learning algorithms are heavily dependent on the inputs
+and parameters given to them, such as training set sizes, learning rates,
+regularization, etc. To evaluate the performance or tweak the model from an
+algorithm, diagnostic plots will be used. Learning and validation curves will
+indicate how the models are performing, initially both with respect to the
+testing error and the cross validation error. As previously mentioned, these
+two errors are to be compared to the training error to understand the
+prediction and generalization strength with respect to training set size and
+the algorithm parameters governing model complexity. 
 
-1. Learning curves: For a given (randomly chosen) training set size for each
-algorithm, run several trainings and predictions. This helps determine if we
-are over or under training and each algorithm's robustness to over/under
-fitting.  
+The learning curves were obtained as follows. For a given (randomly chosen)
+training set size between 15 and 100\% of the total data set, several training
+and prediction rounds were performed. The repetition for obtaining the testing
+error is the same value as the \textit{k} in k-fold cross validation. The
+testing error scenario averages the values of the obtained errors whereas the
+k-fold cross-validation performs this automatically.  The validation curves
+were obtained as follows. For a given parameter, the value of the parameter is
+varied and \textit{k} training and prediction phases are completed, and their
+errors averaged. Again, for k-fold cross-validation, these errors are already
+averaged. The learning curves help determine if we are over- or under-training.
+The validation curves help determine the optimal way to be robust to over- and
+under-fitting. 
 
-2. Regression Training Error: Confidence intervals on predictions to understand
-true error versus sample error Test set must be > 30 instances, Can easily
-calculate N\% confidence interval.
-
-Using cross-validation instead:
-
-1. redo learning curve study without having to run several trainings and
-predictions for each set (bc that's already done!)
-
-2. redo confidence interval study
+% confidence interval stuff for future paper
+%2. Regression Training Error: Confidence intervals on predictions to understand
+%true error versus sample error Test set must be > 30 instances, Can easily
+%calculate N\% confidence interval.
+%2. redo confidence interval study
 
 
 \subsection{Comparing Algorithms}
